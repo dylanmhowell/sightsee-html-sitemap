@@ -28,3 +28,22 @@ function sightsee_html_sitemap_sightsee_html_sitemap_block_init() {
 	register_block_type( __DIR__ . '/build' );
 }
 add_action( 'init', 'sightsee_html_sitemap_sightsee_html_sitemap_block_init' );
+
+/**
+ * Clear the sitemap cache whenever a post or page is saved.
+ */
+function sightsee_html_sitemap_clear_cache_on_save_post($post_id) {
+    // Skip clearing cache on autosaves
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // Skip clearing cache on bulk edits
+    if (isset($_REQUEST['bulk_edit'])) {
+        return;
+    }
+
+    delete_transient('my_sitemap_cache');
+}
+
+add_action('save_post', 'sightsee_html_sitemap_clear_cache_on_save_post');
