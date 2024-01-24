@@ -12,46 +12,32 @@
     if (!$sitemap_cache) {
         ob_start(); // Start output buffering
 
-       // Exclude 'noindex' pages
-$all_pages = get_posts(array(
-    'post_type'   => 'page',
-    'numberposts' => -1,
-    'fields'      => 'ids',
-    'post_status' => 'publish'  // Only fetch published pages
-));
+        // Exclude 'noindex' pages
+        $all_pages = get_posts(array(
+            'post_type'   => 'page',
+            'numberposts' => -1,
+            'fields'      => 'ids',
+            'post_status' => 'publish'  // Only fetch published pages
+        ));
 
-$indexed_pages = array();
-foreach ($all_pages as $page_id) {
-    $yoast_noindex = get_post_meta($page_id, '_yoast_wpseo_meta-robots-noindex', true);
-    $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
-    $rank_math_robots = get_post_meta($page_id, 'rank_math_robots', true);
+        $excluded_pages = array();
+        foreach ($all_pages as $page_id) {
+            $yoast_noindex = get_post_meta($page_id, '_yoast_wpseo_meta-robots-noindex', true);
+            $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
+            $rank_math_robots = get_post_meta($page_id, 'rank_math_robots', true);
 
-    // Determine if the page is indexed
-    $is_indexed = true;
+            if ($yoast_noindex == '1' || $seopress_index != 'yes' || (is_array($rank_math_robots) && in_array('noindex', $rank_math_robots))) {
+                $excluded_pages[] = $page_id;
+            }
+        }
 
-    if ($yoast_noindex == '1') {
-        $is_indexed = false;
-    }
-
-    if ($seopress_index === 'no') {
-        $is_indexed = false;
-    }
-
-    if (is_array($rank_math_robots) && in_array('noindex', $rank_math_robots)) {
-        $is_indexed = false;
-    }
-
-    if ($is_indexed) {
-        $indexed_pages[] = $page_id;
-    }
-}
-
-echo '<h2>' . esc_html__('Pages', 'sightsee-html-sitemap') . '</h2>';
-echo '<ul>';
-foreach ($indexed_pages as $page_id) {
-    echo '<li><a href="' . esc_url(get_permalink($page_id)) . '">' . esc_html(get_the_title($page_id)) . '</a></li>';
-}
-echo '</ul>';
+        echo '<h2>' . esc_html__('Pages', 'sightsee-html-sitemap') . '</h2>';
+        echo '<ul>';
+        wp_list_pages(array(
+            'exclude'  => implode(',', $excluded_pages),
+            'title_li' => ''
+        ));
+        echo '</ul>';
 
         // Posts by category
         $cats = get_categories(array('exclude' => ''));
@@ -65,7 +51,7 @@ echo '</ul>';
                 'cat'            => $cat->cat_ID,
                 'fields'         => 'ids',
                 'post_status'    => 'publish',  // Only fetch published posts
-                'meta_query' => array(
+                'meta_query'     => array(
                     'relation' => 'OR',
                     array(
                         'key'     => '_yoast_wpseo_meta-robots-noindex',
@@ -74,14 +60,9 @@ echo '</ul>';
                     ),
                     array(
                         'key'     => '_seopress_robots_index',
-                        'value'   => 'no',
-                        'compare' => '!='
+                        'value'   => 'yes',
+                        'compare' => '='
                     ),
-                    array(
-                        'key'     => '_seopress_robots_index',
-                        'compare' => 'NOT EXISTS'
-                    ),
-                    // Rank Math condition
                     array(
                         'key'     => 'rank_math_robots',
                         'value'   => 'index',
