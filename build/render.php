@@ -34,7 +34,8 @@
             }
         
             // SEO Press check
-            if ($seopress_index === 'no') {
+            // Only mark as not indexed if '_seopress_robots_index' is explicitly set to 'no'
+            if (!empty($seopress_index) && $seopress_index === 'no') {
                 $is_indexed = false;
             }
         
