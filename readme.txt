@@ -32,5 +32,11 @@ It is simply a list of all pages and posts on your website. This can be helpful 
 
 == Changelog ==
 
+= 0.1.1 =
+* Only show published pages/posts
+* Only show indexed pages/posts
+    * Support for Yoast, Rank Math, and SEO Press.
+
+
 = 0.1.0 =
 * Release
