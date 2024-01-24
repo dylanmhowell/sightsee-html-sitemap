@@ -16,7 +16,8 @@
         $all_pages = get_posts(array(
             'post_type'   => 'page',
             'numberposts' => -1,
-            'fields'      => 'ids'
+            'fields'      => 'ids',
+            'post_status' => 'publish'  // Only fetch published pages
         ));
 
         $excluded_pages = array();
@@ -49,6 +50,7 @@
                 'posts_per_page' => -1,
                 'cat'            => $cat->cat_ID,
                 'fields'         => 'ids',
+                'post_status'    => 'publish',  // Only fetch published posts
                 'meta_query'     => array(
                     'relation' => 'OR',
                     array(
