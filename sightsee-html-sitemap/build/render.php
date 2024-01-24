@@ -33,12 +33,11 @@
                 $is_indexed = false;
             }
         
-          // SEO Press check
-if (empty($seopress_index)) {
-    $is_indexed = true;
-} else if ($seopress_index === 'no') {
-    $is_indexed = false;
-}
+            // SEO Press check
+            // Only mark as not indexed if '_seopress_robots_index' is explicitly set to 'no'
+            if (!empty($seopress_index) && $seopress_index === 'no') {
+                $is_indexed = false;
+            }
         
             // Rank Math check (note: this is not fully accurate due to serialized data)
             if (is_array($rank_math_robots) && in_array('noindex', $rank_math_robots)) {

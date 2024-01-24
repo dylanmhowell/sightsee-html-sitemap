@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "sightsee-html-sitemap/html-sitemap",
+  "version": "0.1.1",
+  "title": "HTML Sitemap",
+  "category": "widgets",
+  "icon": "list-view",
+  "description": "An easy HTML Sitemap plugin created by the team at Sightsee Design.",
+  "keywords": [
+    "sitemap",
+    "html sitemap"
+  ],
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": true,
+    "multiple": false
+  },
+  "textdomain": "sightsee-html-sitemap",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php"
+}
