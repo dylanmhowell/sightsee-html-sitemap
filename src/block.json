@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "sightsee-html-sitemap/html-sitemap",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"title": "HTML Sitemap",
 	"category": "widgets",
 	"icon": "list-view",
