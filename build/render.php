@@ -25,7 +25,6 @@
             $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
             $rank_math_robots = get_post_meta($page_id, 'rank_math_robots', true);
         
-            // Assume the page is indexed by default
             $is_indexed = true;
         
             // Yoast SEO check
@@ -33,19 +32,18 @@
                 $is_indexed = false;
             }
         
-          // SEO Press check
-if (empty($seopress_index)) {
-    $is_indexed = true;
-} else if ($seopress_index === 'no') {
-    $is_indexed = false;
-}
+            // SEO Press check
+            if (!empty($seopress_index) && $seopress_index === 'no') {
+                $is_indexed = false;
+            } elseif (empty($seopress_index)) {
+                $is_indexed = true;
+            }
         
-            // Rank Math check (note: this is not fully accurate due to serialized data)
+            // Rank Math check (considering serialized data issues)
             if (is_array($rank_math_robots) && in_array('noindex', $rank_math_robots)) {
                 $is_indexed = false;
             }
         
-            // If the page is indexed, add it to the array
             if ($is_indexed) {
                 $indexed_pages[] = $page_id;
             }

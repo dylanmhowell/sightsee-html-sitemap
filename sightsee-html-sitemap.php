@@ -47,3 +47,9 @@ function sightsee_html_sitemap_clear_cache_on_save_post($post_id) {
 }
 
 add_action('save_post', 'sightsee_html_sitemap_clear_cache_on_save_post');
+
+function sightsee_html_sitemap_clear_cache() {
+    delete_transient('my_sitemap_cache');
+}
+add_action('init', 'sightsee_html_sitemap_clear_cache');
+
