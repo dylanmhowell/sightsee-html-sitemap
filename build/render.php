@@ -25,23 +25,25 @@
             $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
             $rank_math_robots = get_post_meta($page_id, 'rank_math_robots', true);
         
+            // Assume the page is indexed by default
             $is_indexed = true;
         
-            // Yoast SEO check
+            // Check if Yoast SEO has set the page to 'noindex'
             if ($yoast_noindex == '1') {
                 $is_indexed = false;
             }
         
-            $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
-    if (!empty($seopress_index) && $seopress_index !== 'yes') {
-        $is_indexed = false;
-    }
+            // Check if SEO Press has explicitly set the page to 'noindex'
+            if ($seopress_index === 'no') {
+                $is_indexed = false;
+            }
         
-            // Rank Math check (considering serialized data issues)
+            // Check Rank Math's setting for 'noindex' (considering serialized data issues)
             if (is_array($rank_math_robots) && in_array('noindex', $rank_math_robots)) {
                 $is_indexed = false;
             }
         
+            // Add the page to the array only if it is indexed
             if ($is_indexed) {
                 $indexed_pages[] = $page_id;
             }
