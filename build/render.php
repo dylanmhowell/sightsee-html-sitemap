@@ -32,12 +32,10 @@
                 $is_indexed = false;
             }
         
-            // SEO Press check
-            if (!empty($seopress_index) && $seopress_index === 'no') {
-                $is_indexed = false;
-            } elseif (empty($seopress_index)) {
-                $is_indexed = true;
-            }
+            $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
+    if (!empty($seopress_index) && $seopress_index !== 'yes') {
+        $is_indexed = false;
+    }
         
             // Rank Math check (considering serialized data issues)
             if (is_array($rank_math_robots) && in_array('noindex', $rank_math_robots)) {
