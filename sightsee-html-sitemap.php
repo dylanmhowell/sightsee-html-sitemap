@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:       Sightsee HTML Sitemap
- * Description:       An easy HTML Sitemap plugin created by the team at Sightsee Design.
+ * Plugin Name:       HTML Sitemap Block by Sightsee
+ * Description:       An easy HTML Sitemap block plugin created by the team at Sightsee Design.
  * Requires at least: 6.1
  * Requires PHP:      7.0
  * Version:           0.1.1
@@ -17,13 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-/**
- * Registers the block using the metadata loaded from the `block.json` file.
- * Behind the scenes, it registers also all assets so they can be enqueued
- * through the block editor in the corresponding context.
- *
- * @see https://developer.wordpress.org/reference/functions/register_block_type/
- */
 function sightsee_html_sitemap_sightsee_html_sitemap_block_init() {
 	register_block_type( __DIR__ . '/build' );
 }
