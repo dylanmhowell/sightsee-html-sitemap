@@ -34,7 +34,7 @@
             }
         
             // Check if SEO Press has explicitly set the page to 'noindex'
-            if ($seopress_index === 'no') {
+            if ($seopress_index === 'yes') {
                 $is_indexed = false;
             }
         
