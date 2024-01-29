@@ -60,18 +60,16 @@
         }
         echo '</ul>';
 
-        // Posts by category
-        $cats = get_categories(array('exclude' => ''));
-        foreach ($cats as $cat) {
-            echo '<h2>' . esc_html($cat->cat_name) . '</h2>';
-            echo '<ul>';
+// Posts by category
+$cats = get_categories(array('exclude' => ''));
 
-            // Exclude 'noindex' posts
-            $cat_query = new WP_Query(array(
-                'posts_per_page' => -1,
-                'cat'            => $cat->cat_ID,
-                'fields'         => 'ids',
-                'post_status'    => 'publish',  // Only fetch published posts
+foreach ($cats as $cat) {
+    // Prepare the query for posts in this category
+    $cat_query = new WP_Query(array(
+        'posts_per_page' => -1,
+        'cat'            => $cat->cat_ID,
+        'fields'         => 'ids',
+        'post_status'    => 'publish',
                 'meta_query'     => array(
                     'relation' => 'OR',
                     array(
@@ -101,8 +99,10 @@
                     echo ' - ' . get_the_modified_date('F j, Y', $post_id);
                     echo '</li>';
                 }
+                
+                echo '</ul>';
             }
-            echo '</ul>';
+        
             wp_reset_postdata();
         }
 
