@@ -92,6 +92,9 @@
             ));
 
             if ($cat_query->have_posts()) {
+                echo '<h2>' . esc_html($cat->cat_name) . '</h2>';
+                echo '<ul>';
+                
                 foreach ($cat_query->posts as $post_id) {
                     echo '<li>';
                     echo '<a href="' . esc_url(get_permalink($post_id)) . '">' . esc_html(get_the_title($post_id)) . '</a>';
