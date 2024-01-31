@@ -21,10 +21,13 @@
         
         $indexed_pages = array();
         foreach ($all_pages as $page_id) {
-                // Skip password protected pages
-            if (!empty(get_post_field('post_password', $page_id))) {
-            continue;
-    }
+            $page = get_post($page_id);
+        
+            // Skip password protected pages
+            if (!empty($page->post_password)) {
+                continue;
+            }
+            
             $yoast_noindex = get_post_meta($page_id, '_yoast_wpseo_meta-robots-noindex', true);
             $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
             $rank_math_robots = get_post_meta($page_id, 'rank_math_robots', true);
