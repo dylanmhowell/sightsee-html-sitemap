@@ -16,18 +16,12 @@
             'post_type'   => 'page',
             'numberposts' => -1,
             'fields'      => 'ids',
-            'post_status' => 'publish'
+            'post_status' => 'publish',
+            'has_password' => false
         ));
         
         $indexed_pages = array();
-                foreach ($all_pages as $page_id) {
-                $page_title = get_the_title($page_id);
-            
-                // Skip password protected pages (check if title starts with 'Protected:')
-                if (strpos($page_title, 'Protected:') === 0) {
-                    continue;
-                }
-
+        foreach ($all_pages as $page_id) {
             $yoast_noindex = get_post_meta($page_id, '_yoast_wpseo_meta-robots-noindex', true);
             $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
             $rank_math_robots = get_post_meta($page_id, 'rank_math_robots', true);
@@ -45,7 +39,7 @@
                 $is_indexed = false;
             }
         
-            // Check Rank Math's setting for 'noindex' (considering serialized data issues)
+            // Check Rank Math's setting for 'noindex'
             if (is_array($rank_math_robots) && in_array('noindex', $rank_math_robots)) {
                 $is_indexed = false;
             }
@@ -56,6 +50,7 @@
             }
         }
         
+        // Output the pages...        
         echo '<h2>' . esc_html__('Pages', 'sightsee-html-sitemap') . '</h2>';
         echo '<ul>';
         foreach ($indexed_pages as $page_id) {
