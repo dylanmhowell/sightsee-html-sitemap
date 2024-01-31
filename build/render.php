@@ -20,15 +20,7 @@
         ));
         
         $indexed_pages = array();
-        foreach ($all_pages as $page_id) {
-            $page = get_post($page_id);
-        
-            // Skip password protected pages
-            if (!empty($page->post_password)) {
-                continue;
-            }
-
-        foreach ($all_pages as $page_id) {
+                foreach ($all_pages as $page_id) {
                 $page_title = get_the_title($page_id);
             
                 // Skip password protected pages (check if title starts with 'Protected:')
