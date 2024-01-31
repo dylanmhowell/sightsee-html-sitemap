@@ -27,7 +27,15 @@
             if (!empty($page->post_password)) {
                 continue;
             }
+
+        foreach ($all_pages as $page_id) {
+                $page_title = get_the_title($page_id);
             
+                // Skip password protected pages (check if title starts with 'Protected:')
+                if (strpos($page_title, 'Protected:') === 0) {
+                    continue;
+                }
+
             $yoast_noindex = get_post_meta($page_id, '_yoast_wpseo_meta-robots-noindex', true);
             $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
             $rank_math_robots = get_post_meta($page_id, 'rank_math_robots', true);
