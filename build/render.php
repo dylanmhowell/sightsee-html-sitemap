@@ -71,19 +71,40 @@
                 'meta_query'     => array(
                     'relation' => 'AND',
                     array(
-                        'key'     => '_yoast_wpseo_meta-robots-noindex',
-                        'value'   => '1',
-                        'compare' => '!='
+                        'relation' => 'OR',
+                        array(
+                            'key'     => '_yoast_wpseo_meta-robots-noindex',
+                            'compare' => 'NOT EXISTS'
+                        ),
+                        array(
+                            'key'     => '_yoast_wpseo_meta-robots-noindex',
+                            'value'   => '1',
+                            'compare' => '!='
+                        )
                     ),
                     array(
-                        'key'     => '_seopress_robots_index',
-                        'value'   => 'no',
-                        'compare' => '!='
+                        'relation' => 'OR',
+                        array(
+                            'key'     => '_seopress_robots_index',
+                            'compare' => 'NOT EXISTS'
+                        ),
+                        array(
+                            'key'     => '_seopress_robots_index',
+                            'value'   => 'yes',
+                            'compare' => '='
+                        )
                     ),
                     array(
-                        'key'     => 'rank_math_robots',
-                        'value'   => 'noindex',
-                        'compare' => 'NOT LIKE'
+                        'relation' => 'OR',
+                        array(
+                            'key'     => 'rank_math_robots',
+                            'compare' => 'NOT EXISTS'
+                        ),
+                        array(
+                            'key'     => 'rank_math_robots',
+                            'value'   => 'noindex',
+                            'compare' => 'NOT LIKE'
+                        )
                     )
                 )
             ));

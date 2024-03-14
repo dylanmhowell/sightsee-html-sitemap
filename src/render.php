@@ -58,73 +58,73 @@
         }
         echo '</ul>';
 
-// Posts by category
-$cats = get_categories(array('exclude' => ''));
+        // Posts by category
+        $cats = get_categories(array('exclude' => ''));
 
-foreach ($cats as $cat) {
-    // Prepare the query for posts in this category
-    $cat_query = new WP_Query(array(
-        'posts_per_page' => -1,
-        'cat'            => $cat->cat_ID,
-        'fields'         => 'ids',
-        'post_status'    => 'publish',
-        'meta_query'     => array(
-            'relation' => 'AND',
-            array(
-                'relation' => 'OR',
-                array(
-                    'key'     => '_yoast_wpseo_meta-robots-noindex',
-                    'compare' => 'NOT EXISTS',
-                ),
-                array(
-                    'key'     => '_yoast_wpseo_meta-robots-noindex',
-                    'value'   => '1',
-                    'compare' => '!=',
-                ),
-            ),
-            array(
-                'relation' => 'OR',
-                array(
-                    'key'     => '_seopress_robots_index',
-                    'compare' => 'NOT EXISTS',
-                ),
-                array(
-                    'key'     => '_seopress_robots_index',
-                    'value'   => 'yes',
-                    'compare' => '=',
-                ),
-            ),
-            array(
-                'relation' => 'OR',
-                array(
-                    'key'     => 'rank_math_robots',
-                    'compare' => 'NOT EXISTS',
-                ),
-                array(
-                    'key'     => 'rank_math_robots',
-                    'value'   => 'noindex',
-                    'compare' => 'NOT LIKE',
-                ),
-            ),
-        ),
-    ));
+        foreach ($cats as $cat) {
+            // Prepare the query for posts in this category
+            $cat_query = new WP_Query(array(
+                'posts_per_page' => -1,
+                'cat'            => $cat->cat_ID,
+                'fields'         => 'ids',
+                'post_status'    => 'publish',
+                'meta_query'     => array(
+                    'relation' => 'AND',
+                    array(
+                        'relation' => 'OR',
+                        array(
+                            'key'     => '_yoast_wpseo_meta-robots-noindex',
+                            'compare' => 'NOT EXISTS'
+                        ),
+                        array(
+                            'key'     => '_yoast_wpseo_meta-robots-noindex',
+                            'value'   => '1',
+                            'compare' => '!='
+                        )
+                    ),
+                    array(
+                        'relation' => 'OR',
+                        array(
+                            'key'     => '_seopress_robots_index',
+                            'compare' => 'NOT EXISTS'
+                        ),
+                        array(
+                            'key'     => '_seopress_robots_index',
+                            'value'   => 'yes',
+                            'compare' => '='
+                        )
+                    ),
+                    array(
+                        'relation' => 'OR',
+                        array(
+                            'key'     => 'rank_math_robots',
+                            'compare' => 'NOT EXISTS'
+                        ),
+                        array(
+                            'key'     => 'rank_math_robots',
+                            'value'   => 'noindex',
+                            'compare' => 'NOT LIKE'
+                        )
+                    )
+                )
+            ));
 
-    if ($cat_query->have_posts()) {
-        echo '<h2>' . esc_html($cat->cat_name) . '</h2>';
-        echo '<ul>';
+            if ($cat_query->have_posts()) {
+                echo '<h2>' . esc_html($cat->cat_name) . '</h2>';
+                echo '<ul>';
+                
+                foreach ($cat_query->posts as $post_id) {
+                    echo '<li>';
+                    echo '<a href="' . esc_url(get_permalink($post_id)) . '">' . esc_html(get_the_title($post_id)) . '</a>';
+                    echo ' - ' . get_the_modified_date('F j, Y', $post_id);
+                    echo '</li>';
+                }
+                
+                echo '</ul>';
+            }
         
-        foreach ($cat_query->posts as $post_id) {
-            echo '<li>';
-            echo '<a href="' . esc_url(get_permalink($post_id)) . '">' . esc_html(get_the_title($post_id)) . '</a>';
-            echo ' - ' . get_the_modified_date('F j, Y', $post_id);
-            echo '</li>';
+            wp_reset_postdata();
         }
-        
-        echo '</ul>';
-    }
-
-    wp_reset_postdata();
-}
 
         $sitemap_cache = ob_get_clean(); // Get output and clean buffer
         set_transient('my_sitemap_cache', $sitemap_cache, 86400); // Cache for 1 day
