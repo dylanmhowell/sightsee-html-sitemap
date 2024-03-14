@@ -30,12 +30,12 @@
             $is_indexed = true;
         
             // Check if Yoast SEO has set the page to 'noindex'
-            if ($yoast_noindex == '1') {
+            if ($yoast_noindex === '1') {
                 $is_indexed = false;
             }
         
             // Check if SEO Press has explicitly set the page to 'noindex'
-            if ($seopress_index === 'yes') {
+            if ($seopress_index === 'no') {
                 $is_indexed = false;
             }
         
@@ -50,7 +50,7 @@
             }
         }
         
-        // Output the pages...        
+        // Output the pages        
         echo '<h2>' . esc_html__('Pages', 'sightsee-html-sitemap') . '</h2>';
         echo '<ul>';
         foreach ($indexed_pages as $page_id) {
@@ -58,18 +58,18 @@
         }
         echo '</ul>';
 
-// Posts by category
-$cats = get_categories(array('exclude' => ''));
+        // Posts by category
+        $cats = get_categories(array('exclude' => ''));
 
-foreach ($cats as $cat) {
-    // Prepare the query for posts in this category
-    $cat_query = new WP_Query(array(
-        'posts_per_page' => -1,
-        'cat'            => $cat->cat_ID,
-        'fields'         => 'ids',
-        'post_status'    => 'publish',
+        foreach ($cats as $cat) {
+            // Prepare the query for posts in this category
+            $cat_query = new WP_Query(array(
+                'posts_per_page' => -1,
+                'cat'            => $cat->cat_ID,
+                'fields'         => 'ids',
+                'post_status'    => 'publish',
                 'meta_query'     => array(
-                    'relation' => 'OR',
+                    'relation' => 'AND',
                     array(
                         'key'     => '_yoast_wpseo_meta-robots-noindex',
                         'value'   => '1',
@@ -77,12 +77,13 @@ foreach ($cats as $cat) {
                     ),
                     array(
                         'key'     => '_seopress_robots_index',
-                        'compare' => 'NOT EXISTS'
+                        'value'   => 'no',
+                        'compare' => '!='
                     ),
                     array(
                         'key'     => 'rank_math_robots',
-                        'value'   => 'index',
-                        'compare' => 'LIKE'
+                        'value'   => 'noindex',
+                        'compare' => 'NOT LIKE'
                     )
                 )
             ));
