@@ -109,9 +109,13 @@
         }
 
         $sitemap_cache = ob_get_clean(); // Get output and clean buffer
-        set_transient('my_sitemap_cache', $sitemap_cache, 86400); // Cache for 1 day
+        if ($sitemap_cache !== false) {
+            set_transient('my_sitemap_cache', $sitemap_cache, 86400); // Cache for 1 day
+        }
     }
 
-    echo $sitemap_cache; // Output the sitemap
+    if ($sitemap_cache !== false) {
+        echo $sitemap_cache; // Output the sitemap
+    }
     ?>
 </div>

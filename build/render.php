@@ -24,7 +24,6 @@
         foreach ($all_pages as $page_id) {
             $yoast_noindex = get_post_meta($page_id, '_yoast_wpseo_meta-robots-noindex', true);
             $seopress_index = get_post_meta($page_id, '_seopress_robots_index', true);
-            $rank_math_robots = get_post_meta($page_id, 'rank_math_robots', true);
         
             // Assume the page is indexed by default
             $is_indexed = true;
@@ -36,11 +35,6 @@
         
             // Check if SEO Press has explicitly set the page to 'noindex'
             if ($seopress_index === 'no') {
-                $is_indexed = false;
-            }
-        
-            // Check Rank Math's setting for 'noindex'
-            if (is_array($rank_math_robots) && in_array('noindex', $rank_math_robots)) {
                 $is_indexed = false;
             }
         
@@ -93,18 +87,6 @@
                             'value'   => 'yes',
                             'compare' => '='
                         )
-                    ),
-                    array(
-                        'relation' => 'OR',
-                        array(
-                            'key'     => 'rank_math_robots',
-                            'compare' => 'NOT EXISTS'
-                        ),
-                        array(
-                            'key'     => 'rank_math_robots',
-                            'value'   => 'noindex',
-                            'compare' => 'NOT LIKE'
-                        )
                     )
                 )
             ));
@@ -127,9 +109,13 @@
         }
 
         $sitemap_cache = ob_get_clean(); // Get output and clean buffer
-        set_transient('my_sitemap_cache', $sitemap_cache, 86400); // Cache for 1 day
+        if ($sitemap_cache !== false) {
+            set_transient('my_sitemap_cache', $sitemap_cache, 86400); // Cache for 1 day
+        }
     }
 
-    echo $sitemap_cache; // Output the sitemap
+    if ($sitemap_cache !== false) {
+        echo $sitemap_cache; // Output the sitemap
+    }
     ?>
 </div>
