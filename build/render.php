@@ -53,43 +53,35 @@
         echo '</ul>';
 
         // Posts by category
-        $cats = get_categories(array('exclude' => ''));
+$cats = get_categories(array('exclude' => ''));
 
-        foreach ($cats as $cat) {
-            // Prepare the query for posts in this category
-            $cat_query = new WP_Query(array(
-                'posts_per_page' => -1,
-                'cat'            => $cat->cat_ID,
-                'fields'         => 'ids',
-                'post_status'    => 'publish',
-                'meta_query'     => array(
-                    'relation' => 'AND',
-                    array(
-                        'relation' => 'OR',
-                        array(
-                            'key'     => '_yoast_wpseo_meta-robots-noindex',
-                            'compare' => 'NOT EXISTS'
-                        ),
-                        array(
-                            'key'     => '_yoast_wpseo_meta-robots-noindex',
-                            'value'   => '1',
-                            'compare' => '!='
-                        )
-                    ),
-                    array(
-                        'relation' => 'OR',
-                        array(
-                            'key'     => '_seopress_robots_index',
-                            'compare' => 'NOT EXISTS'
-                        ),
-                        array(
-                            'key'     => '_seopress_robots_index',
-                            'value'   => 'yes',
-                            'compare' => '='
-                        )
-                    )
+foreach ($cats as $cat) {
+    // Prepare the query for posts in this category
+    $cat_query = new WP_Query(array(
+        'posts_per_page' => -1,
+        'cat'            => $cat->cat_ID,
+        'fields'         => 'ids',
+        'post_status'    => 'publish',
+        'meta_query'     => array(
+            'relation' => 'AND',
+            array(
+                'relation' => 'OR',
+                array(
+                    'key'     => '_yoast_wpseo_meta-robots-noindex',
+                    'compare' => 'NOT EXISTS'
+                ),
+                array(
+                    'key'     => '_yoast_wpseo_meta-robots-noindex',
+                    'value'   => '1',
+                    'compare' => '!='
                 )
-            ));
+            ),
+            array(
+                'key'     => '_seopress_robots_index',
+                'compare' => 'NOT EXISTS'
+            )
+        )
+    ));
 
             if ($cat_query->have_posts()) {
                 echo '<h2>' . esc_html($cat->cat_name) . '</h2>';
